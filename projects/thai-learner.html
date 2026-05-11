@@ -626,6 +626,17 @@ section {
   border-color: var(--accent);
 }
 
+.footer-links {
+  margin-top: 16px;
+  display: flex;
+  justify-content: center;
+  gap: 28px;
+  flex-wrap: wrap;
+}
+.footer-links .footer-link {
+  margin-top: 0;
+}
+
 /* === RESPONSIVE === */
 @media (max-width: 768px) {
   .container, .container-narrow {
@@ -683,7 +694,7 @@ section {
   <div class="container hero-content">
     <div class="hero-eyebrow">
       <span class="status-dot"></span>
-      <span class="eyebrow">In active development · Bangkok</span>
+      <span class="eyebrow">Shipped · Content-complete · Bangkok</span>
     </div>
     
     <h1 class="display hero-title">
@@ -692,7 +703,7 @@ section {
     </h1>
     
     <p class="hero-tagline">
-      A web app for learning Thai through <em>active recall</em>, <em>pattern recognition</em>, and <em>native voice</em> — built solo, shipped continuously.
+      A web app for learning Thai through <em>active recall</em>, <em>pattern recognition</em>, and <em>native voice</em> — built solo, content-complete across five tiers, now in <em>real-use observation</em>.
     </p>
     
     <div class="hero-meta">
@@ -702,7 +713,7 @@ section {
       </div>
       <div class="hero-meta-item">
         <span class="hero-meta-label">Build method</span>
-        <span class="hero-meta-value">AI-assisted, prompt-engineered</span>
+        <span class="hero-meta-value">Solo, orchestrated AI agents</span>
       </div>
       <div class="hero-meta-item">
         <span class="hero-meta-label">Repository</span>
@@ -717,9 +728,14 @@ section {
   <div class="container">
     <div class="stats-grid">
       <div class="stat">
-        <div class="stat-value">333<span class="unit">+</span></div>
-        <div class="stat-label">Vocabulary pairs</div>
-        <div class="stat-detail">across 30 topics</div>
+        <div class="stat-value">533</div>
+        <div class="stat-label">Word + sentence pairs</div>
+        <div class="stat-detail">across 50 topics</div>
+      </div>
+      <div class="stat">
+        <div class="stat-value">5</div>
+        <div class="stat-label">Tiers complete</div>
+        <div class="stat-detail">foundational &rarr; natural</div>
       </div>
       <div class="stat">
         <div class="stat-value">8</div>
@@ -727,14 +743,9 @@ section {
         <div class="stat-detail">visual, audio, kinesthetic</div>
       </div>
       <div class="stat">
-        <div class="stat-value">~1.6K</div>
+        <div class="stat-value">~3.5K</div>
         <div class="stat-label">Audio files</div>
-        <div class="stat-detail">native voice quality</div>
-      </div>
-      <div class="stat">
-        <div class="stat-value">2</div>
-        <div class="stat-label">Voice tiers</div>
-        <div class="stat-detail">free + premium</div>
+        <div class="stat-detail">two voices, native quality</div>
       </div>
     </div>
   </div>
@@ -878,51 +889,57 @@ section {
       <div class="section-eyebrow"><span class="eyebrow">The roadmap</span></div>
       <h2 class="display section-title">Where we are. <em>Where we're going.</em></h2>
       <p class="section-lead">
-        Five tiers of patterns, building from foundational structures to natural Thai. Tier 1 shipped. Each subsequent tier expands what learners can produce in real conversation.
+        All five tiers shipped &mdash; 250 pattern pairs across 25 grammatical patterns. The product is content-complete by its original definition. Next: <em>use it</em> before deciding what to build.
       </p>
     </header>
     
     <div class="timeline">
       <div class="tl-item done">
-        <div class="tl-status">✓ Shipped</div>
+        <div class="tl-status">&check; Shipped</div>
         <h3 class="tl-title">Foundation: auth, sync, and core modes</h3>
-        <p class="tl-desc">Supabase backend, cross-device progress sync, premium tier framework. Eight learning modes, native audio for all content, 333 vocabulary pairs.</p>
+        <p class="tl-desc">Supabase backend, cross-device progress sync, premium tier framework. Eight learning modes, native audio for all content, 533 pairs across 50 topics.</p>
       </div>
       
       <div class="tl-item done">
-        <div class="tl-status">✓ Shipped</div>
-        <h3 class="tl-title">Tier 1 — Foundational patterns</h3>
+        <div class="tl-status">&check; Shipped</div>
+        <h3 class="tl-title">Tier 1 &mdash; Foundational patterns</h3>
         <p class="tl-desc">Five bedrock patterns including identity statements, simple descriptions, negation, and Thai's distinctive question-word-at-end structure. 50 pattern-based pairs.</p>
       </div>
       
-      <div class="tl-item current">
-        <div class="tl-status">→ In progress</div>
-        <h3 class="tl-title">Tier 2 — Survival patterns</h3>
+      <div class="tl-item done">
+        <div class="tl-status">&check; Shipped</div>
+        <h3 class="tl-title">Tier 2 &mdash; Survival patterns</h3>
         <p class="tl-desc">Six patterns covering the day-one essentials: asking location, requesting items, asking ability, asking price, expressing want and need. 60 pattern pairs.</p>
       </div>
       
-      <div class="tl-item">
-        <div class="tl-status">Planned</div>
-        <h3 class="tl-title">Tier 3 — Daily interaction</h3>
-        <p class="tl-desc">Likes/dislikes, possession, going places, eating/drinking, comparatives, time markers. The patterns that turn survival Thai into conversational Thai.</p>
+      <div class="tl-item done">
+        <div class="tl-status">&check; Shipped</div>
+        <h3 class="tl-title">Tier 3 &mdash; Daily interaction</h3>
+        <p class="tl-desc">Likes/dislikes, possession, going places, eating/drinking, comparatives, time markers. The patterns that turn survival Thai into conversational Thai. 60 pattern pairs.</p>
+      </div>
+      
+      <div class="tl-item done">
+        <div class="tl-status">&check; Shipped</div>
+        <h3 class="tl-title">Tier 4 &mdash; Refinement</h3>
+        <p class="tl-desc">Softening particles, completion markers, future tense, "with someone," "not yet." The patterns that make speech sound less robotic. 50 pattern pairs.</p>
+      </div>
+      
+      <div class="tl-item done">
+        <div class="tl-status">&check; Shipped</div>
+        <h3 class="tl-title">Tier 5 &mdash; Natural Thai</h3>
+        <p class="tl-desc">Tag questions, intensifiers, polite request constructions. The patterns that signal "this person actually speaks Thai" to native ears. 30 pattern pairs.</p>
+      </div>
+      
+      <div class="tl-item current">
+        <div class="tl-status">&rarr; Current</div>
+        <h3 class="tl-title">Real-use observation</h3>
+        <p class="tl-desc">Deliberate pause from building. Daily 15&ndash;20 minute sessions, as a user not a builder, watching what actually gets internalized and where the friction is. No new features until real intuition replaces theory.</p>
       </div>
       
       <div class="tl-item">
-        <div class="tl-status">Planned</div>
-        <h3 class="tl-title">Tier 4 — Refinement</h3>
-        <p class="tl-desc">Softening particles, completion markers, future tense, "with someone," "not yet." The patterns that make speech sound less robotic.</p>
-      </div>
-      
-      <div class="tl-item">
-        <div class="tl-status">Planned</div>
-        <h3 class="tl-title">Tier 5 — Natural Thai</h3>
-        <p class="tl-desc">Tag questions, intensifiers, polite request constructions. The patterns that signal "this person actually speaks Thai" to native ears.</p>
-      </div>
-      
-      <div class="tl-item">
-        <div class="tl-status">Future</div>
-        <h3 class="tl-title">Conversation Simulator</h3>
-        <p class="tl-desc">Multi-turn dialogue chains for real-world scenarios — ordering food, asking directions, market bargaining. The bridge from app to reality.</p>
+        <div class="tl-status">Candidates</div>
+        <h3 class="tl-title">What's next, undecided</h3>
+        <p class="tl-desc">Several next moves are plausible &mdash; a native speaker review pass on Tier 2&ndash;5, a Conversation Simulator for multi-turn scenarios, Stripe integration to activate the premium framework, or specific UX fixes surfaced by the observation phase. Which one comes first will be discovered, not planned.</p>
       </div>
     </div>
   </div>
@@ -933,7 +950,7 @@ section {
   <div class="container">
     <header class="section-header">
       <div class="section-eyebrow"><span class="eyebrow">The build</span></div>
-      <h2 class="display section-title">Built lean, <em>shipped continuously.</em></h2>
+      <h2 class="display section-title">Built lean, <em>content-complete.</em></h2>
       <p class="section-lead">
         Vanilla web technologies, deliberately. No build step. No framework lock-in. Just HTML, CSS, JavaScript, and the discipline to keep them organized as the project grows.
       </p>
@@ -984,10 +1001,10 @@ section {
         <div class="stack-cat-name">Process</div>
         <ul class="stack-list">
           <li>Solo developer</li>
-          <li>AI-assisted (Claude Code)</li>
-          <li>Architecture-as-code</li>
-          <li>Native speaker review</li>
-          <li>Iterative tier shipping</li>
+          <li>AI-orchestrated (Claude Code + Codex)</li>
+          <li>Handoff documentation</li>
+          <li>Content audits</li>
+          <li>Tier-by-tier shipping</li>
         </ul>
       </div>
       <div class="stack-cat">
@@ -1009,7 +1026,10 @@ section {
   <div class="container-narrow">
     <div class="footer-thai">โชคดี</div>
     <p class="footer-text">— Good luck.</p>
-    <a href="https://mprocto8.github.io/Thai-Learning-Master-Site" class="footer-link">→ Try it live</a>
+    <div class="footer-links">
+      <a href="../" class="footer-link">&larr; Back to catalog</a>
+      <a href="https://mprocto8.github.io/Thai-Learning-Master-Site" class="footer-link">Try it live &rarr;</a>
+    </div>
   </div>
 </footer>
 
