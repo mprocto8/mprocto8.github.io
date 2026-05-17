@@ -1,0 +1,1683 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Thai Learner — IA Redesign Proposal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300..700&family=Newsreader:ital,opsz,wght@0,6..72,300..600;1,6..72,300..500&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+Thai:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  /* Document palette */
+  --bg-0: #14100c;
+  --bg-1: #1f1813;
+  --bg-2: #2a2018;
+  --line: rgba(245, 230, 211, 0.08);
+  --line-strong: rgba(245, 230, 211, 0.16);
+  --text-0: #f5e6d3;
+  --text-1: rgba(245, 230, 211, 0.72);
+  --text-2: rgba(245, 230, 211, 0.5);
+  --text-3: rgba(245, 230, 211, 0.32);
+  --accent: #f59e0b;
+  --accent-warm: #fbbf24;
+  --teal: #2dd4bf;
+  --teal-dim: rgba(45, 212, 191, 0.7);
+  --green: #10b981;
+  
+  /* Phone screen palette (mimicking app) */
+  --phone-bg: #0d0a08;
+  --phone-surface: #1c1611;
+  --phone-surface-2: #2a201a;
+  --phone-text: #f5e6d3;
+  --phone-text-dim: rgba(245, 230, 211, 0.6);
+  --phone-text-faint: rgba(245, 230, 211, 0.35);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Newsreader', Georgia, serif;
+  font-weight: 380;
+  background: var(--bg-0);
+  color: var(--text-0);
+  line-height: 1.55;
+  font-size: 17px;
+  letter-spacing: -0.005em;
+  -webkit-font-smoothing: antialiased;
+  position: relative;
+  min-height: 100vh;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+  opacity: 0.04;
+  pointer-events: none;
+  z-index: 100;
+  mix-blend-mode: overlay;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 32px;
+}
+
+.container-narrow {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 0 32px;
+}
+
+.display {
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-weight: 500;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+}
+
+.eyebrow {
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-weight: 500;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.mono {
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.thai {
+  font-family: 'Noto Sans Thai', sans-serif;
+}
+
+/* === HERO === */
+.hero {
+  padding: 120px 0 80px;
+  border-bottom: 1px solid var(--line);
+  position: relative;
+}
+
+.hero-content { position: relative; z-index: 1; }
+
+.hero-eyebrow {
+  margin-bottom: 32px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--teal);
+  box-shadow: 0 0 12px rgba(45, 212, 191, 0.6);
+}
+
+.hero-title {
+  font-size: clamp(48px, 7vw, 80px);
+  margin-bottom: 32px;
+  max-width: 900px;
+}
+
+.hero-title em {
+  color: var(--accent);
+  font-style: italic;
+  font-family: 'Newsreader', serif;
+  font-weight: 400;
+}
+
+.hero-lead {
+  font-size: clamp(19px, 2vw, 24px);
+  max-width: 640px;
+  color: var(--text-1);
+  margin-bottom: 56px;
+  font-weight: 380;
+  line-height: 1.5;
+}
+
+.hero-lead em {
+  color: var(--text-0);
+  font-style: italic;
+  font-weight: 400;
+}
+
+.hero-meta {
+  display: flex;
+  gap: 56px;
+  flex-wrap: wrap;
+  padding-top: 32px;
+  border-top: 1px solid var(--line);
+}
+
+.hero-meta-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.hero-meta-label {
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+
+.hero-meta-value {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 15px;
+  color: var(--text-1);
+  font-weight: 500;
+}
+
+/* === SECTIONS === */
+section {
+  padding: 100px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.section-header {
+  margin-bottom: 64px;
+  max-width: 720px;
+}
+
+.section-eyebrow {
+  margin-bottom: 24px;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.section-eyebrow::before {
+  content: '';
+  width: 32px;
+  height: 1px;
+  background: var(--accent);
+}
+
+.section-title {
+  font-size: clamp(36px, 5vw, 56px);
+  margin-bottom: 24px;
+}
+
+.section-title em {
+  color: var(--accent);
+  font-style: italic;
+  font-family: 'Newsreader', serif;
+  font-weight: 400;
+}
+
+.section-lead {
+  font-size: 20px;
+  color: var(--text-1);
+  line-height: 1.55;
+  font-weight: 380;
+}
+
+.section-lead em {
+  color: var(--text-0);
+  font-style: italic;
+}
+
+/* === PHONE MOCKUP === */
+.phone {
+  width: 320px;
+  background: var(--phone-bg);
+  border-radius: 44px;
+  padding: 12px;
+  border: 1px solid var(--line-strong);
+  box-shadow: 
+    0 30px 60px -20px rgba(0,0,0,0.6),
+    inset 0 0 0 1px rgba(245, 230, 211, 0.03);
+  position: relative;
+  font-family: 'Inter', system-ui, sans-serif;
+}
+
+.phone::before {
+  content: '';
+  position: absolute;
+  top: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100px;
+  height: 28px;
+  background: #000;
+  border-radius: 16px;
+  z-index: 10;
+}
+
+.phone-screen {
+  background: var(--phone-bg);
+  border-radius: 32px;
+  overflow: hidden;
+  padding-top: 60px;
+  min-height: 600px;
+  position: relative;
+  color: var(--phone-text);
+}
+
+.phone-status {
+  position: absolute;
+  top: 16px;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 32px;
+  font-size: 13px;
+  font-weight: 600;
+  z-index: 11;
+  color: var(--phone-text);
+}
+
+.phone-time { padding-left: 8px; }
+.phone-icons { padding-right: 8px; letter-spacing: 2px; }
+
+/* App content shared */
+.app-content {
+  padding: 16px 20px 80px;
+}
+
+.app-tabs {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(13, 10, 8, 0.95);
+  backdrop-filter: blur(20px);
+  border-top: 1px solid var(--line);
+  padding: 12px 0 32px;
+  display: flex;
+  justify-content: space-around;
+  font-family: 'Inter', sans-serif;
+}
+
+.app-tab {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--phone-text-faint);
+  letter-spacing: 0.02em;
+}
+
+.app-tab-icon {
+  font-size: 22px;
+  line-height: 1;
+}
+
+.app-tab.active {
+  color: var(--accent);
+}
+
+/* === HOME TAB === */
+.home-greeting {
+  margin-bottom: 24px;
+  padding-top: 12px;
+}
+
+.home-thai {
+  font-family: 'Noto Sans Thai', sans-serif;
+  font-size: 14px;
+  color: var(--phone-text-dim);
+  margin-bottom: 2px;
+}
+
+.home-name {
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--phone-text);
+  letter-spacing: -0.01em;
+}
+
+.home-streak {
+  font-size: 12px;
+  color: var(--phone-text-dim);
+  margin-top: 4px;
+}
+
+.home-streak .flame { color: var(--accent); }
+
+.session-card {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.12) 0%, rgba(245, 158, 11, 0.04) 100%);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 24px;
+  position: relative;
+}
+
+.session-label {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--accent);
+  margin-bottom: 8px;
+}
+
+.session-duration {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  font-size: 11px;
+  color: var(--phone-text-dim);
+  font-weight: 500;
+}
+
+.session-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--phone-text);
+  margin-bottom: 6px;
+  line-height: 1.3;
+}
+
+.session-desc {
+  font-size: 13px;
+  color: var(--phone-text-dim);
+  margin-bottom: 16px;
+  line-height: 1.4;
+}
+
+.session-button {
+  background: var(--accent);
+  color: var(--phone-bg);
+  font-size: 13px;
+  font-weight: 600;
+  padding: 10px 16px;
+  border-radius: 10px;
+  text-align: center;
+  letter-spacing: -0.01em;
+}
+
+.capabilities {
+  background: var(--phone-surface);
+  border-radius: 14px;
+  padding: 16px;
+  margin-bottom: 20px;
+}
+
+.capabilities-title {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--phone-text-faint);
+  margin-bottom: 12px;
+}
+
+.capability {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  padding: 6px 0;
+  color: var(--phone-text);
+}
+
+.capability-icon {
+  font-size: 12px;
+  width: 16px;
+  flex-shrink: 0;
+}
+
+.capability.done .capability-icon { color: var(--green); }
+.capability.next .capability-icon { color: var(--accent); }
+.capability.next { color: var(--phone-text); font-weight: 500; }
+
+.quick-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.quick-card {
+  background: var(--phone-surface);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 14px;
+}
+
+.quick-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--phone-text-faint);
+  margin-bottom: 4px;
+  font-weight: 600;
+}
+
+.quick-value {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--phone-text);
+}
+
+.quick-value .badge {
+  display: inline-block;
+  font-size: 10px;
+  background: var(--accent);
+  color: var(--phone-bg);
+  padding: 2px 6px;
+  border-radius: 8px;
+  margin-left: 4px;
+  vertical-align: middle;
+  font-weight: 700;
+}
+
+.word-of-day {
+  text-align: center;
+  padding: 16px;
+  background: var(--phone-surface);
+  border-radius: 14px;
+  border: 1px solid var(--line);
+}
+
+.wod-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--phone-text-faint);
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+.wod-thai {
+  font-family: 'Noto Sans Thai', sans-serif;
+  font-size: 22px;
+  color: var(--accent);
+  margin-bottom: 4px;
+  font-weight: 500;
+}
+
+.wod-roman {
+  font-size: 13px;
+  color: var(--phone-text-dim);
+  margin-bottom: 2px;
+}
+
+.wod-eng {
+  font-size: 12px;
+  color: var(--phone-text);
+  font-weight: 500;
+}
+
+/* === LEARN TAB === */
+.learn-header {
+  margin-bottom: 24px;
+  padding-top: 12px;
+}
+
+.learn-title {
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-bottom: 4px;
+}
+
+.learn-subtitle {
+  font-size: 13px;
+  color: var(--phone-text-dim);
+}
+
+.pathway-card {
+  background: var(--phone-surface);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 16px;
+  margin-bottom: 12px;
+  position: relative;
+}
+
+.pathway-card.active {
+  border-color: var(--accent);
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.08), transparent);
+}
+
+.pathway-card.done {
+  opacity: 0.65;
+}
+
+.pathway-status {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.pathway-status.done { color: var(--green); }
+.pathway-status.active { color: var(--accent); }
+.pathway-status.locked { color: var(--phone-text-faint); }
+
+.pathway-tier {
+  font-family: 'Inter', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--phone-text-faint);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+.pathway-name {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--phone-text);
+  margin-bottom: 4px;
+  letter-spacing: -0.01em;
+}
+
+.pathway-desc {
+  font-size: 12px;
+  color: var(--phone-text-dim);
+  margin-bottom: 12px;
+  line-height: 1.4;
+}
+
+.pathway-progress {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.progress-bar {
+  flex: 1;
+  height: 4px;
+  background: rgba(245, 230, 211, 0.08);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 2px;
+}
+
+.pathway-progress-text {
+  font-size: 11px;
+  color: var(--phone-text-dim);
+  font-weight: 500;
+  font-feature-settings: "tnum";
+  min-width: 40px;
+  text-align: right;
+}
+
+.pathway-replay {
+  display: inline-block;
+  font-size: 11px;
+  color: var(--phone-text-dim);
+  margin-top: 8px;
+  padding: 4px 8px;
+  background: rgba(245, 230, 211, 0.06);
+  border-radius: 6px;
+}
+
+/* === LIBRARY TAB === */
+.library-header {
+  margin-bottom: 20px;
+  padding-top: 12px;
+}
+
+.library-title {
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-bottom: 4px;
+}
+
+.library-subtitle {
+  font-size: 13px;
+  color: var(--phone-text-dim);
+}
+
+.library-search {
+  background: var(--phone-surface);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 10px 14px;
+  margin-bottom: 16px;
+  font-size: 13px;
+  color: var(--phone-text-faint);
+}
+
+.library-section {
+  margin-bottom: 20px;
+}
+
+.library-section-title {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--phone-text-faint);
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.section-count {
+  color: var(--phone-text-faint);
+  font-weight: 500;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+}
+
+.topic-card {
+  background: var(--phone-surface);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 12px 14px;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.topic-icon {
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.topic-info {
+  flex: 1;
+}
+
+.topic-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--phone-text);
+  margin-bottom: 2px;
+}
+
+.topic-meta {
+  font-size: 11px;
+  color: var(--phone-text-faint);
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.topic-badge {
+  font-size: 9px;
+  font-weight: 700;
+  padding: 3px 7px;
+  border-radius: 6px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.topic-badge.pattern {
+  background: rgba(45, 212, 191, 0.15);
+  color: var(--teal);
+}
+
+.topic-badge.situation {
+  background: rgba(245, 158, 11, 0.15);
+  color: var(--accent);
+}
+
+/* === SETTINGS TAB === */
+.settings-header {
+  padding-top: 12px;
+  margin-bottom: 24px;
+}
+
+.settings-title {
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.settings-section {
+  margin-bottom: 28px;
+}
+
+.settings-section-title {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--phone-text-faint);
+  margin-bottom: 10px;
+}
+
+.settings-card {
+  background: var(--phone-surface);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.settings-row {
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--line);
+  font-size: 13px;
+}
+
+.settings-row:last-child { border-bottom: none; }
+
+.settings-row-label {
+  font-weight: 500;
+  color: var(--phone-text);
+}
+
+.settings-row-value {
+  font-size: 12px;
+  color: var(--phone-text-dim);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.toggle {
+  width: 36px;
+  height: 22px;
+  background: rgba(245, 230, 211, 0.15);
+  border-radius: 11px;
+  position: relative;
+}
+
+.toggle.on { background: var(--accent); }
+
+.toggle::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 18px;
+  height: 18px;
+  background: white;
+  border-radius: 50%;
+  transition: transform 0.2s ease;
+}
+
+.toggle.on::after { transform: translateX(14px); }
+
+.user-pill {
+  background: var(--phone-surface);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.user-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent), var(--accent-warm));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  color: var(--phone-bg);
+  font-size: 14px;
+}
+
+.user-info { flex: 1; }
+.user-name { font-size: 13px; font-weight: 600; }
+.user-tier { font-size: 11px; color: var(--accent); font-weight: 500; margin-top: 2px; }
+
+/* === PHONE GRID === */
+.phones-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  gap: 48px;
+  margin-top: 32px;
+}
+
+.phone-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.phone-label {
+  margin-top: 32px;
+  text-align: center;
+  max-width: 320px;
+}
+
+.phone-tab-name {
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  letter-spacing: -0.02em;
+}
+
+.phone-tab-name em {
+  color: var(--accent);
+  font-style: italic;
+  font-family: 'Newsreader', serif;
+  font-weight: 400;
+}
+
+.phone-tab-desc {
+  font-size: 14px;
+  color: var(--text-1);
+  line-height: 1.5;
+  max-width: 280px;
+  margin: 0 auto;
+}
+
+/* === COMPARISON TABLE === */
+.compare-table {
+  border: 1px solid var(--line-strong);
+  border-radius: 4px;
+  overflow: hidden;
+  margin-top: 32px;
+}
+
+.compare-row {
+  display: grid;
+  grid-template-columns: 240px 1fr 1fr;
+  border-bottom: 1px solid var(--line);
+}
+
+.compare-row:last-child { border-bottom: none; }
+
+.compare-row.header {
+  background: var(--bg-1);
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-weight: 500;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-2);
+}
+
+.compare-cell {
+  padding: 18px 20px;
+  border-right: 1px solid var(--line);
+  font-size: 15px;
+}
+
+.compare-cell:last-child { border-right: none; }
+.compare-cell.label {
+  font-weight: 500;
+  color: var(--text-0);
+  font-family: 'Bricolage Grotesque', sans-serif;
+}
+
+.compare-cell.before {
+  color: var(--text-2);
+}
+
+.compare-cell.after {
+  color: var(--text-0);
+}
+
+.compare-cell.after em {
+  color: var(--accent);
+  font-style: italic;
+  font-family: 'Newsreader', serif;
+}
+
+/* === RATIONALE === */
+.rationale-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1px;
+  background: var(--line-strong);
+  border: 1px solid var(--line-strong);
+  margin-top: 32px;
+}
+
+.rationale {
+  background: var(--bg-0);
+  padding: 32px;
+}
+
+.rationale-num {
+  font-family: 'Newsreader', serif;
+  font-style: italic;
+  font-size: 36px;
+  color: var(--accent);
+  line-height: 1;
+  font-weight: 400;
+  margin-bottom: 16px;
+}
+
+.rationale-title {
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-size: 18px;
+  font-weight: 500;
+  margin-bottom: 10px;
+  letter-spacing: -0.01em;
+}
+
+.rationale-desc {
+  color: var(--text-1);
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+/* === ANNOTATION === */
+.annotation {
+  background: var(--bg-1);
+  border-left: 2px solid var(--accent);
+  padding: 24px 28px;
+  margin: 32px 0;
+  border-radius: 0 4px 4px 0;
+}
+
+.annotation-label {
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--accent);
+  margin-bottom: 12px;
+  font-weight: 500;
+}
+
+.annotation-text {
+  font-size: 15px;
+  color: var(--text-0);
+  line-height: 1.6;
+  font-style: italic;
+}
+
+.annotation-text strong {
+  color: var(--text-0);
+  font-weight: 500;
+  font-style: normal;
+}
+
+/* === FOOTER === */
+.footer {
+  padding: 60px 0 80px;
+  text-align: center;
+  background: var(--bg-1);
+}
+
+.footer-thai {
+  font-family: 'Noto Sans Thai', sans-serif;
+  font-size: 28px;
+  color: var(--accent);
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+
+.footer-text {
+  color: var(--text-2);
+  font-size: 14px;
+  font-style: italic;
+}
+
+.footer-meta {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--text-3);
+  margin-top: 16px;
+  letter-spacing: 0.08em;
+}
+
+@media (max-width: 768px) {
+  .container, .container-narrow { padding: 0 20px; }
+  .compare-row { grid-template-columns: 1fr; }
+  .compare-cell { border-right: none; border-bottom: 1px solid var(--line); }
+  .compare-cell:last-child { border-bottom: none; }
+  .hero { padding: 80px 0 60px; }
+  section { padding: 64px 0; }
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--bg-0);
+}
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="container hero-content">
+    <div class="hero-eyebrow">
+      <span class="dot"></span>
+      <span class="eyebrow">Information Architecture · Proposal v2</span>
+    </div>
+    
+    <h1 class="display hero-title">
+      Less choices.<br>
+      <em>More learning.</em>
+    </h1>
+    
+    <p class="hero-lead">
+      A proposed restructure of Thai Learner from a feature-rich dashboard to a <em>focused four-tab architecture</em>. Built around how returning users actually behave: they want to know what to do next, not what they could do.
+    </p>
+    
+    <div class="hero-meta">
+      <div class="hero-meta-item">
+        <span class="hero-meta-label">Current</span>
+        <span class="hero-meta-value">5 tabs · multiple CTAs · dashboard-style</span>
+      </div>
+      <div class="hero-meta-item">
+        <span class="hero-meta-label">Proposed</span>
+        <span class="hero-meta-value">4 tabs · 1 primary CTA · session-style</span>
+      </div>
+      <div class="hero-meta-item">
+        <span class="hero-meta-label">Optimized for</span>
+        <span class="hero-meta-value">Retention · habit · monetization</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- THE FOUR TABS -->
+<section>
+  <div class="container">
+    <header class="section-header">
+      <div class="section-eyebrow"><span class="eyebrow">The proposal</span></div>
+      <h2 class="display section-title">Four tabs, <em>one purpose each.</em></h2>
+      <p class="section-lead">
+        Each tab answers a different question the user is asking themselves. <em>Home</em> answers "what should I do now?" <em>Learn</em> answers "where am I in my journey?" <em>Library</em> answers "let me explore." <em>Settings</em> stays out of the way.
+      </p>
+    </header>
+    
+    <div class="phones-grid">
+      
+      <!-- HOME -->
+      <div class="phone-wrapper">
+        <div class="phone">
+          <div class="phone-screen">
+            <div class="phone-status">
+              <span class="phone-time">9:42</span>
+              <span class="phone-icons">···</span>
+            </div>
+            <div class="app-content">
+              <div class="home-greeting">
+                <div class="home-thai">สวัสดี Aaron</div>
+                <div class="home-name">Welcome back</div>
+                <div class="home-streak"><span class="flame">🔥</span> 12 day streak · Day 47</div>
+              </div>
+              
+              <div class="session-card">
+                <div class="session-label">Today's session</div>
+                <div class="session-duration">~10 min</div>
+                <div class="session-title">Continue Tier 2: Asking for things</div>
+                <div class="session-desc">3 patterns left · ขอ, ได้ไหม, อยู่ที่ไหน</div>
+                <div class="session-button">Start session →</div>
+              </div>
+              
+              <div class="capabilities">
+                <div class="capabilities-title">You can now</div>
+                <div class="capability done">
+                  <span class="capability-icon">✓</span>
+                  <span>Introduce yourself</span>
+                </div>
+                <div class="capability done">
+                  <span class="capability-icon">✓</span>
+                  <span>Make basic statements</span>
+                </div>
+                <div class="capability done">
+                  <span class="capability-icon">✓</span>
+                  <span>Ask yes/no questions</span>
+                </div>
+                <div class="capability next">
+                  <span class="capability-icon">→</span>
+                  <span>Ask for things politely</span>
+                </div>
+              </div>
+              
+              <div class="quick-row">
+                <div class="quick-card">
+                  <div class="quick-label">Review</div>
+                  <div class="quick-value">Mistakes <span class="badge">3</span></div>
+                </div>
+                <div class="quick-card">
+                  <div class="quick-label">Daily</div>
+                  <div class="quick-value">Listen drill</div>
+                </div>
+              </div>
+              
+              <div class="word-of-day">
+                <div class="wod-label">Word of the day</div>
+                <div class="wod-thai">มิถุนายน</div>
+                <div class="wod-roman">Mí-thù-naa-yon</div>
+                <div class="wod-eng">June</div>
+              </div>
+            </div>
+            <div class="app-tabs">
+              <div class="app-tab active">
+                <span class="app-tab-icon">🏠</span>
+                <span>Home</span>
+              </div>
+              <div class="app-tab">
+                <span class="app-tab-icon">🗺️</span>
+                <span>Learn</span>
+              </div>
+              <div class="app-tab">
+                <span class="app-tab-icon">📚</span>
+                <span>Library</span>
+              </div>
+              <div class="app-tab">
+                <span class="app-tab-icon">⚙️</span>
+                <span>Settings</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="phone-label">
+          <h3 class="phone-tab-name">Home</h3>
+          <p class="phone-tab-desc">The "what now?" answer. One primary session CTA. Concrete capabilities. Light gamification without overwhelm.</p>
+        </div>
+      </div>
+      
+      <!-- LEARN -->
+      <div class="phone-wrapper">
+        <div class="phone">
+          <div class="phone-screen">
+            <div class="phone-status">
+              <span class="phone-time">9:42</span>
+              <span class="phone-icons">···</span>
+            </div>
+            <div class="app-content">
+              <div class="learn-header">
+                <div class="learn-title">Learn</div>
+                <div class="learn-subtitle">Your structured path · 5 tiers · 25 patterns</div>
+              </div>
+              
+              <div class="pathway-card done">
+                <div class="pathway-status done">Mastered</div>
+                <div class="pathway-tier">Tier 1 · Foundational</div>
+                <div class="pathway-name">Bedrock patterns</div>
+                <div class="pathway-desc">Identity, statements, negation, questions</div>
+                <div class="pathway-progress">
+                  <div class="progress-bar"><div class="progress-fill" style="width:100%"></div></div>
+                  <div class="pathway-progress-text">50/50</div>
+                </div>
+                <div class="pathway-replay">↻ Replay</div>
+              </div>
+              
+              <div class="pathway-card active">
+                <div class="pathway-status active">In progress</div>
+                <div class="pathway-tier">Tier 2 · Survival</div>
+                <div class="pathway-name">Day-one essentials</div>
+                <div class="pathway-desc">Asking location, prices, ability, want, need</div>
+                <div class="pathway-progress">
+                  <div class="progress-bar"><div class="progress-fill" style="width:60%"></div></div>
+                  <div class="pathway-progress-text">36/60</div>
+                </div>
+              </div>
+              
+              <div class="pathway-card">
+                <div class="pathway-status locked">Locked</div>
+                <div class="pathway-tier">Tier 3 · Daily</div>
+                <div class="pathway-name">Daily interaction</div>
+                <div class="pathway-desc">Likes, possession, eating, comparison</div>
+                <div class="pathway-progress">
+                  <div class="progress-bar"></div>
+                  <div class="pathway-progress-text">0/60</div>
+                </div>
+              </div>
+              
+              <div class="pathway-card">
+                <div class="pathway-status locked">Locked</div>
+                <div class="pathway-tier">Tier 4 · Refinement</div>
+                <div class="pathway-name">Natural particles</div>
+                <div class="pathway-desc">Softening, completion, future, "with"</div>
+                <div class="pathway-progress">
+                  <div class="progress-bar"></div>
+                  <div class="pathway-progress-text">0/50</div>
+                </div>
+              </div>
+            </div>
+            <div class="app-tabs">
+              <div class="app-tab">
+                <span class="app-tab-icon">🏠</span>
+                <span>Home</span>
+              </div>
+              <div class="app-tab active">
+                <span class="app-tab-icon">🗺️</span>
+                <span>Learn</span>
+              </div>
+              <div class="app-tab">
+                <span class="app-tab-icon">📚</span>
+                <span>Library</span>
+              </div>
+              <div class="app-tab">
+                <span class="app-tab-icon">⚙️</span>
+                <span>Settings</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="phone-label">
+          <h3 class="phone-tab-name">Learn</h3>
+          <p class="phone-tab-desc">The structured journey. Tier-by-tier progression. Mastered pathways stay replayable. Locked tiers preview what's coming.</p>
+        </div>
+      </div>
+      
+      <!-- LIBRARY -->
+      <div class="phone-wrapper">
+        <div class="phone">
+          <div class="phone-screen">
+            <div class="phone-status">
+              <span class="phone-time">9:42</span>
+              <span class="phone-icons">···</span>
+            </div>
+            <div class="app-content">
+              <div class="library-header">
+                <div class="library-title">Library</div>
+                <div class="library-subtitle">Browse all 50 topics · 533 pairs</div>
+              </div>
+              
+              <div class="library-search">🔍  Search topics or words...</div>
+              
+              <div class="library-section">
+                <div class="library-section-title">
+                  <span>Patterns</span>
+                  <span class="section-count">20 topics</span>
+                </div>
+                <div class="topic-card">
+                  <span class="topic-icon">🪪</span>
+                  <div class="topic-info">
+                    <div class="topic-name">My Name Is...</div>
+                    <div class="topic-meta">10 pairs · 100% mastered</div>
+                  </div>
+                  <span class="topic-badge pattern">Pattern</span>
+                </div>
+                <div class="topic-card">
+                  <span class="topic-icon">📍</span>
+                  <div class="topic-info">
+                    <div class="topic-name">Where Is It?</div>
+                    <div class="topic-meta">10 pairs · 60% mastered</div>
+                  </div>
+                  <span class="topic-badge pattern">Pattern</span>
+                </div>
+                <div class="topic-card">
+                  <span class="topic-icon">🙏</span>
+                  <div class="topic-info">
+                    <div class="topic-name">Can I Have...?</div>
+                    <div class="topic-meta">10 pairs · 40% mastered</div>
+                  </div>
+                  <span class="topic-badge pattern">Pattern</span>
+                </div>
+              </div>
+              
+              <div class="library-section">
+                <div class="library-section-title">
+                  <span>Vocabulary</span>
+                  <span class="section-count">21 topics</span>
+                </div>
+                <div class="topic-card">
+                  <span class="topic-icon">👋</span>
+                  <div class="topic-info">
+                    <div class="topic-name">Greetings &amp; Phrases</div>
+                    <div class="topic-meta">14 words · 97% mastered</div>
+                  </div>
+                </div>
+                <div class="topic-card">
+                  <span class="topic-icon">📅</span>
+                  <div class="topic-info">
+                    <div class="topic-name">Months</div>
+                    <div class="topic-meta">12 words · 78% mastered</div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="library-section">
+                <div class="library-section-title">
+                  <span>Situations</span>
+                  <span class="section-count">4 topics</span>
+                </div>
+                <div class="topic-card">
+                  <span class="topic-icon">🍜</span>
+                  <div class="topic-info">
+                    <div class="topic-name">Ordering Food</div>
+                    <div class="topic-meta">15 phrases · Browse</div>
+                  </div>
+                  <span class="topic-badge situation">Situation</span>
+                </div>
+              </div>
+            </div>
+            <div class="app-tabs">
+              <div class="app-tab">
+                <span class="app-tab-icon">🏠</span>
+                <span>Home</span>
+              </div>
+              <div class="app-tab">
+                <span class="app-tab-icon">🗺️</span>
+                <span>Learn</span>
+              </div>
+              <div class="app-tab active">
+                <span class="app-tab-icon">📚</span>
+                <span>Library</span>
+              </div>
+              <div class="app-tab">
+                <span class="app-tab-icon">⚙️</span>
+                <span>Settings</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="phone-label">
+          <h3 class="phone-tab-name">Library</h3>
+          <p class="phone-tab-desc">Free exploration. Browse by type. Tap any topic to see all items inside with audio buttons. Modes launch from inside the detail view.</p>
+        </div>
+      </div>
+      
+      <!-- SETTINGS -->
+      <div class="phone-wrapper">
+        <div class="phone">
+          <div class="phone-screen">
+            <div class="phone-status">
+              <span class="phone-time">9:42</span>
+              <span class="phone-icons">···</span>
+            </div>
+            <div class="app-content">
+              <div class="settings-header">
+                <div class="settings-title">Settings</div>
+              </div>
+              
+              <div class="user-pill">
+                <div class="user-avatar">A</div>
+                <div class="user-info">
+                  <div class="user-name">Aaron</div>
+                  <div class="user-tier">★ Premium</div>
+                </div>
+                <span style="color: var(--phone-text-faint); font-size: 13px;">›</span>
+              </div>
+              
+              <div class="settings-section">
+                <div class="settings-section-title">Voice &amp; Audio</div>
+                <div class="settings-card">
+                  <div class="settings-row">
+                    <span class="settings-row-label">Voice</span>
+                    <span class="settings-row-value">Serafina ›</span>
+                  </div>
+                  <div class="settings-row">
+                    <span class="settings-row-label">Listen speed</span>
+                    <span class="settings-row-value">0.85x</span>
+                  </div>
+                  <div class="settings-row">
+                    <span class="settings-row-label">Auto-advance</span>
+                    <div class="toggle"></div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="settings-section">
+                <div class="settings-section-title">Display</div>
+                <div class="settings-card">
+                  <div class="settings-row">
+                    <span class="settings-row-label">Script preference</span>
+                    <span class="settings-row-value">Both ›</span>
+                  </div>
+                  <div class="settings-row">
+                    <span class="settings-row-label">Theme</span>
+                    <span class="settings-row-value">Warm dark</span>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="settings-section">
+                <div class="settings-section-title">Notifications</div>
+                <div class="settings-card">
+                  <div class="settings-row">
+                    <span class="settings-row-label">Daily reminder</span>
+                    <div class="toggle on"></div>
+                  </div>
+                  <div class="settings-row">
+                    <span class="settings-row-label">Reminder time</span>
+                    <span class="settings-row-value">7:00 PM</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="app-tabs">
+              <div class="app-tab">
+                <span class="app-tab-icon">🏠</span>
+                <span>Home</span>
+              </div>
+              <div class="app-tab">
+                <span class="app-tab-icon">🗺️</span>
+                <span>Learn</span>
+              </div>
+              <div class="app-tab">
+                <span class="app-tab-icon">📚</span>
+                <span>Library</span>
+              </div>
+              <div class="app-tab active">
+                <span class="app-tab-icon">⚙️</span>
+                <span>Settings</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="phone-label">
+          <h3 class="phone-tab-name">Settings</h3>
+          <p class="phone-tab-desc">Out of the way. Voice, display, notifications, account. Premium status visible. Notifications enable daily habit-building.</p>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+</section>
+
+<!-- HOME DEEP DIVE -->
+<section>
+  <div class="container-narrow">
+    <header class="section-header">
+      <div class="section-eyebrow"><span class="eyebrow">The home screen</span></div>
+      <h2 class="display section-title">Why <em>one</em> primary action.</h2>
+      <p class="section-lead">
+        Research on language app retention shows the same pattern repeatedly: <em>clarity beats abundance</em>. Users who see one clear action take it 3-5x more often than users who see five options and pick none.
+      </p>
+    </header>
+    
+    <div class="annotation">
+      <div class="annotation-label">The retention insight</div>
+      <p class="annotation-text">
+        <strong>Streaks don't drive learning.</strong> They drive 30-second busywork that "saves the streak." What drives learning is the visible feeling that <em>you can now do something you couldn't yesterday</em>. The "You can now..." section makes mastery tangible — concrete capabilities, not abstract XP.
+      </p>
+    </div>
+    
+    <div class="rationale-grid">
+      <div class="rationale">
+        <div class="rationale-num">i.</div>
+        <h3 class="rationale-title">One primary CTA</h3>
+        <p class="rationale-desc">"Today's Session" picks the right next thing based on user state. Mistake review if needed, otherwise next pathway step. No paralysis.</p>
+      </div>
+      <div class="rationale">
+        <div class="rationale-num">ii.</div>
+        <h3 class="rationale-title">Visible capability growth</h3>
+        <p class="rationale-desc">Concrete unlocks ("Ask for things politely" → next) replace abstract XP. The user sees themselves becoming functional in Thai.</p>
+      </div>
+      <div class="rationale">
+        <div class="rationale-num">iii.</div>
+        <h3 class="rationale-title">Secondary options de-emphasized</h3>
+        <p class="rationale-desc">Mistake review and free play remain accessible but smaller. They serve users who want them without dominating the primary path.</p>
+      </div>
+      <div class="rationale">
+        <div class="rationale-num">iv.</div>
+        <h3 class="rationale-title">Light touchpoints</h3>
+        <p class="rationale-desc">Streak count, word of the day, day number — present but not pressuring. Habit-forming without anxiety-inducing.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHAT MOVES WHERE -->
+<section>
+  <div class="container">
+    <header class="section-header">
+      <div class="section-eyebrow"><span class="eyebrow">Migration plan</span></div>
+      <h2 class="display section-title">What moves <em>where.</em></h2>
+      <p class="section-lead">
+        Nothing is lost. Every existing feature has a new home. The restructure is mostly about <em>where things live</em>, not <em>what exists</em>.
+      </p>
+    </header>
+    
+    <div class="compare-table">
+      <div class="compare-row header">
+        <div class="compare-cell">Feature</div>
+        <div class="compare-cell">Current location</div>
+        <div class="compare-cell">New location</div>
+      </div>
+      <div class="compare-row">
+        <div class="compare-cell label">Today's listening drill</div>
+        <div class="compare-cell before">Home dashboard card</div>
+        <div class="compare-cell after"><em>Home</em> — secondary "Daily" card</div>
+      </div>
+      <div class="compare-row">
+        <div class="compare-cell label">Streak &amp; XP</div>
+        <div class="compare-cell before">Home dashboard cards</div>
+        <div class="compare-cell after"><em>Home</em> — header strip (de-emphasized)</div>
+      </div>
+      <div class="compare-row">
+        <div class="compare-cell label">Word of the Day</div>
+        <div class="compare-cell before">Home dashboard card</div>
+        <div class="compare-cell after"><em>Home</em> — bottom (delight, not primary)</div>
+      </div>
+      <div class="compare-row">
+        <div class="compare-cell label">Mistake review</div>
+        <div class="compare-cell before">Practice tab button</div>
+        <div class="compare-cell after"><em>Home</em> — quick action card</div>
+      </div>
+      <div class="compare-row">
+        <div class="compare-cell label">Pathways</div>
+        <div class="compare-cell before">Pathways tab</div>
+        <div class="compare-cell after"><em>Learn</em> tab (renamed, with Tiers 2-5 added)</div>
+      </div>
+      <div class="compare-row">
+        <div class="compare-cell label">Pathway replay</div>
+        <div class="compare-cell before">Not available</div>
+        <div class="compare-cell after"><em>Learn</em> — replay button on mastered pathways</div>
+      </div>
+      <div class="compare-row">
+        <div class="compare-cell label">Topic browsing</div>
+        <div class="compare-cell before">Practice tab</div>
+        <div class="compare-cell after"><em>Library</em> tab (renamed)</div>
+      </div>
+      <div class="compare-row">
+        <div class="compare-cell label">Topic detail view</div>
+        <div class="compare-cell before">Not available</div>
+        <div class="compare-cell after"><em>Library</em> — tap topic → full detail screen</div>
+      </div>
+      <div class="compare-row">
+        <div class="compare-cell label">Mode launchers</div>
+        <div class="compare-cell before">Buttons on topic cards</div>
+        <div class="compare-cell after"><em>Library</em> — inside topic detail view</div>
+      </div>
+      <div class="compare-row">
+        <div class="compare-cell label">Script learning</div>
+        <div class="compare-cell before">Dedicated tab</div>
+        <div class="compare-cell after"><em>Library</em> — promoted to top topic group</div>
+      </div>
+      <div class="compare-row">
+        <div class="compare-cell label">Settings</div>
+        <div class="compare-cell before">Settings tab</div>
+        <div class="compare-cell after"><em>Settings</em> tab (unchanged)</div>
+      </div>
+    </div>
+    
+    <div class="annotation">
+      <div class="annotation-label">What gets demoted</div>
+      <p class="annotation-text">
+        The current home screen treats <strong>streak, XP, daily drill, mistake count, and word of the day</strong> as roughly equal priority. The new structure makes <em>session continuation</em> the top priority, with everything else as supporting context. This is the single biggest UX change.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- MONETIZATION CONTEXT -->
+<section>
+  <div class="container-narrow">
+    <header class="section-header">
+      <div class="section-eyebrow"><span class="eyebrow">Monetization-ready</span></div>
+      <h2 class="display section-title">Built to <em>pay for itself.</em></h2>
+      <p class="section-lead">
+        The new architecture creates natural moments for premium upsell — without gating the core learning experience. <em>Pay for momentum, not content.</em>
+      </p>
+    </header>
+    
+    <div class="rationale-grid">
+      <div class="rationale">
+        <div class="rationale-num">i.</div>
+        <h3 class="rationale-title">Premium voice slot</h3>
+        <p class="rationale-desc">Settings → Voice picker shows Serafina as a premium option. Already built. Becomes a paid feature once Stripe is wired up.</p>
+      </div>
+      <div class="rationale">
+        <div class="rationale-num">ii.</div>
+        <h3 class="rationale-title">Soft daily caps</h3>
+        <p class="rationale-desc">Free users get ~15 min/day of "Today's Session." Premium removes the cap. Caps drive upgrades without limiting access.</p>
+      </div>
+      <div class="rationale">
+        <div class="rationale-num">iii.</div>
+        <h3 class="rationale-title">Premium-only modes</h3>
+        <p class="rationale-desc">Future Conversation Simulator and advanced analytics live in Library but are gated. Real value differentiation.</p>
+      </div>
+      <div class="rationale">
+        <div class="rationale-num">iv.</div>
+        <h3 class="rationale-title">Account tier visible</h3>
+        <p class="rationale-desc">Premium status appears in user pill (Settings). Light status signaling. Free users see what they could unlock.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- IMPLEMENTATION ORDER -->
+<section>
+  <div class="container-narrow">
+    <header class="section-header">
+      <div class="section-eyebrow"><span class="eyebrow">Implementation</span></div>
+      <h2 class="display section-title">Ship in <em>three phases.</em></h2>
+      <p class="section-lead">
+        Each phase ships independently and leaves the app working. No big-bang rewrites.
+      </p>
+    </header>
+    
+    <div class="rationale-grid">
+      <div class="rationale">
+        <div class="rationale-num">1.</div>
+        <h3 class="rationale-title">Topic detail screen</h3>
+        <p class="rationale-desc">Build the topic browser improvement first. Works in current IA. Becomes the foundation for the Library tab later.</p>
+      </div>
+      <div class="rationale">
+        <div class="rationale-num">2.</div>
+        <h3 class="rationale-title">IA restructure</h3>
+        <p class="rationale-desc">Rename tabs, reorganize content. Big visual change but mostly moving things between places.</p>
+      </div>
+      <div class="rationale">
+        <div class="rationale-num">3.</div>
+        <h3 class="rationale-title">Smart Home logic</h3>
+        <p class="rationale-desc">Build the "Today's Session" algorithm. Capability tracking. Personalized recommendations. The intelligence layer.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="container-narrow">
+    <div class="footer-thai">โครงสร้าง</div>
+    <p class="footer-text">— Structure.</p>
+    <div class="footer-meta">Information Architecture v2 · Proposal · For review</div>
+  </div>
+</footer>
+
+</body>
+</html>
